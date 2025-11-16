@@ -29,7 +29,7 @@ Sviluppare un sistema automatizzato che analizzi due immagini della stessa monet
 ### ✔️ Preprocessing
 - Resize → 224x224
 - Normalizzazione
-- Data augmentation 
+- Data augmentation (se scelta)
 
 ### ✔️ Training
 - Ottimizzatore: **Adam**
@@ -64,4 +64,30 @@ Sviluppare un sistema automatizzato che analizzi due immagini della stessa monet
 - Pandas  
 - NumPy  
 - Pillow  
-- Matp
+- Matplotlib  
+
+### 🔹 Deployment
+- Endpoint REST  
+- Interfaccia Streamlit (upload immagini → predizione)
+
+---
+
+# 🚀 Deployment & Serving
+
+Il modello addestrato viene:
+
+1. Registrato in **MLflow Model Registry**
+2. Pubblicato tramite **Databricks Model Serving**
+3. Reso disponibile per inferenza via **REST API**
+
+### Esempio di richiesta API:
+
+```json
+{
+  "inputs": [
+    {
+      "front_image_base64": "...",
+      "back_image_base64": "..."
+    }
+  ]
+}
