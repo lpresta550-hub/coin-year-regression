@@ -11,7 +11,7 @@ Prevedere l’anno di conio di una moneta antica utilizzando due immagini (front
 
 ---
 
-# 🔍 Notebook Completo (Versione Avanzata)
+# 🔍 Notebook Completo 
 
 Il notebook principale contiene l’intera pipeline di lavoro:
 
