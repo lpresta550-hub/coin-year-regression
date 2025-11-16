@@ -1,86 +1,86 @@
 # 🪙 Coin Year Regression – Deep Learning & MLOps Project
 
 Modello di **deep learning** basato su immagini **fronte/retro** per prevedere l’anno di conio delle monete antiche.  
-Pipeline completa progettata e sviluppata su **Databricks**, con tracking esperimenti tramite **MLflow**, deploy tramite **Model Serving** e interfaccia di inferenza con **Streamlit**.
+Pipeline completa sviluppata su **Databricks**, con tracking esperimenti tramite **MLflow**, deploy tramite **Model Serving**, e interfaccia di inferenza tramite **Streamlit**.
 
 ---
 
 # 🎯 Obiettivo
 
-Sviluppare un sistema automatizzato che analizzi due immagini della stessa moneta (fronte e retro) e predica l’anno di conio tramite un modello di regressione basato su architettura **ResNet18**.
+Sviluppare un sistema automatizzato che analizzi due immagini della stessa moneta (fronte e retro) e predica l’anno di conio attraverso un modello di regressione basato su **ResNet18** con doppio input.
+
+---
+
+# 🔍 Notebook Completo
+
+Il **notebook principale** contenente:
+
+- Esplorazione dataset (EDA)  
+- Preprocessing immagini  
+- Definizione del modello  
+- Training + Validazione  
+- MLflow Tracking  
+- Inferenza
+
+si trova qui:
+
+➡️ **`notebooks/Coin_Regression_Pipeline.ipynb`**
+
+Questo notebook documenta l’intero workflow end-to-end.
 
 ---
 
 # 🧠 Architettura del Modello
 
-- Modello base: **ResNet18** pre-addestrata su ImageNet  
-- Approccio multi-input:
-  - Una ResNet per il lato *fronte*
-  - Una ResNet per il lato *retro*
-- Estrazione feature → concatenazione → regressione finale
-- Output: anno stimato (valore numerico)
+- Base: **ResNet18** pre-addestrata su ImageNet  
+- Architettura dual-input:
+  - ResNet18 per il lato *fronte*
+  - ResNet18 per il lato *retro*
+- Concatenazione feature → Fully Connected finale  
+- Task: Regressione sull’anno di conio  
 
-📌 *Architettura implementata in `model.py`.*
+📌 Implementazione: `src/model.py`
 
 ---
 
 # ⚙️ Pipeline di Addestramento
 
 ### ✔️ Preprocessing
-- Resize → 224x224
-- Normalizzazione
-- Data augmentation (se scelta)
+- Resize 224×224  
+- Normalizzazione  
+- Data augmentation (opzionale)
 
 ### ✔️ Training
-- Ottimizzatore: **Adam**
-- Loss function: **MAE**
-- Validazione: **K-Fold cross-validation**
-- Tracciamento esperimenti: **MLflow**
+- Ottimizzatore: **Adam**  
+- Loss: **MAE** (Mean Absolute Error)  
+- Valutazione con **K-Fold cross-validation**
 
-### ✔️ Metriche
-- **MAE** (Mean Absolute Error)
-- **MSE**
-- **R²** (se calcolato)
+### ✔️ Tracking Esperimenti
+Tramite **MLflow**:
+- Modelli
+- Metriche
+- Parametri
+- Artifact
 
-📊 *Esempio: MAE finale ≈ 21 anni*  
+### ✔️ Metriche principali
+- **MAE**
+- MSE
+- R²
 
+📊 *Esempio:* MAE finale ≈ **21 anni**  
 
----
-
-# 🛠️ Stack Tecnologico
-
-### 🔹 Deep Learning
-- PyTorch  
-- torchvision  
-
-### 🔹 MLOps
-- Databricks  
-- MLflow  
-- Model Registry  
-- Databricks Jobs  
-- Model Serving API  
-
-### 🔹 Data & Tools
-- Pandas  
-- NumPy  
-- Pillow  
-- Matplotlib  
-
-### 🔹 Deployment
-- Endpoint REST  
-- Interfaccia Streamlit (upload immagini → predizione)
 
 ---
 
 # 🚀 Deployment & Serving
 
-Il modello addestrato viene:
+Il modello viene:
 
-1. Registrato in **MLflow Model Registry**
-2. Pubblicato tramite **Databricks Model Serving**
-3. Reso disponibile per inferenza via **REST API**
+1. Registrato in **MLflow Model Registry**  
+2. Pubblicato tramite **Databricks Model Serving**  
+3. Chiamato tramite **REST API**
 
-### Esempio di richiesta API:
+### Esempio richiesta API:
 
 ```json
 {
