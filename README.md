@@ -1,79 +1,67 @@
-# Coin Year Regression – Deep Learning su immagini di monete antiche
+# 🪙 Coin Year Regression – Deep Learning & MLOps Project
 
-Progetto di **deep learning** per la previsione dell’anno di conio di monete antiche a partire da immagini **fronte/retro**, con pipeline end-to-end su **Databricks**.
-
----
-
-## 🎯 Obiettivo
-
-Predire l’anno di conio di una moneta antica utilizzando un modello di deep learning basato su **ResNet18**, sfruttando entrambe le immagini (fronte e retro) come input.
+Modello di **deep learning** basato su immagini **fronte/retro** per prevedere l’anno di conio delle monete antiche.  
+Pipeline completa progettata e sviluppata su **Databricks**, con tracking esperimenti tramite **MLflow**, deploy tramite **Model Serving** e interfaccia di inferenza con **Streamlit**.
 
 ---
 
-## 🧠 Architettura del modello
+# 🎯 Obiettivo
 
-- Base: **ResNet18** pre-addestrata
-- Input: 2 immagini (fronte e retro)
-- Pipeline:
-  - Preprocessing e normalizzazione delle immagini
-  - Estrazione di feature per ciascun lato
-  - Fusione delle feature e regressione sull’anno di conio
-- Task: **regressione** (predizione anno in valore numerico)
+Sviluppare un sistema automatizzato che analizzi due immagini della stessa moneta (fronte e retro) e predica l’anno di conio tramite un modello di regressione basato su architettura **ResNet18**.
 
 ---
 
-## 🧪 Pipeline & Training
+# 🧠 Architettura del Modello
 
-- Preprocessing immagini (resize, normalization, data augmentation)
-- Split del dataset e **K-Fold cross-validation**
-- Metriche di valutazione:
-  - Mean Absolute Error (MAE)
-  - Altre metriche di supporto (es. MSE, R² se utilizzate)
+- Modello base: **ResNet18** pre-addestrata su ImageNet  
+- Approccio multi-input:
+  - Una ResNet per il lato *fronte*
+  - Una ResNet per il lato *retro*
+- Estrazione feature → concatenazione → regressione finale
+- Output: anno stimato (valore numerico)
 
-> 📝 Esempio: *MAE finale ≈ 21 anni (valore indicativo, da aggiornare con i tuoi risultati reali)*
-
----
-
-## 🛠️ Stack Tecnologico
-
-- **Linguaggi & librerie:**
-  - Python, PyTorch, torchvision, NumPy, Pandas
-- **MLOps & piattaforma:**
-  - Databricks, MLflow, Model Registry, Databricks Jobs, Delta Lake, DBFS
-- **Visualizzazione & analisi:**
-  - Matplotlib, Seaborn
-
+📌 *Architettura implementata in `model.py`.*
 
 ---
 
-## 🚀 Deploy & Serving
+# ⚙️ Pipeline di Addestramento
 
-- Salvataggio modello e tracciamento esperimenti con **MLflow**
-- Registrazione del modello in **Model Registry**
-- Deploy tramite **Databricks Model Serving** con endpoint **REST API**
-- Creazione di una semplice **interfaccia Streamlit** per consentire il caricamento delle immagini e la predizione dell’anno
+### ✔️ Preprocessing
+- Resize → 224x224
+- Normalizzazione
+- Data augmentation 
+
+### ✔️ Training
+- Ottimizzatore: **Adam**
+- Loss function: **MAE**
+- Validazione: **K-Fold cross-validation**
+- Tracciamento esperimenti: **MLflow**
+
+### ✔️ Metriche
+- **MAE** (Mean Absolute Error)
+- **MSE**
+- **R²** (se calcolato)
+
+📊 *Esempio: MAE finale ≈ 21 anni*  
+
 
 ---
 
-## 📂 Struttura del progetto (prevista)
+# 🛠️ Stack Tecnologico
 
-```bash
-coin-year-regression/
-│
-├── src/
-│   ├── dataset.py
-│   ├── model.py
-│   ├── train.py
-│   ├── inference.py
-│   └── utils.py
-│
-├── notebooks/
-│   ├── 01_exploration.ipynb
-│   └── 02_training.ipynb
-│
-├── docs/
-│   ├── architecture.png
-│   ├── mlflow_screenshots.png
-│   └── streamlit_ui.png
-│
-└── README.md
+### 🔹 Deep Learning
+- PyTorch  
+- torchvision  
+
+### 🔹 MLOps
+- Databricks  
+- MLflow  
+- Model Registry  
+- Databricks Jobs  
+- Model Serving API  
+
+### 🔹 Data & Tools
+- Pandas  
+- NumPy  
+- Pillow  
+- Matp
