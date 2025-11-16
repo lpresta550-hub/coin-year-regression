@@ -1,94 +1,138 @@
-### 🪙 Coin Year Regression – End-to-End MLOps System on Databricks
-Questo progetto implementa un sistema completo di Computer Vision e MLOps per prevedere l’anno di conio di una moneta antica a partire da due immagini (fronte e retro).
-L’intero flusso – dal preprocessing alla predizione in tempo reale – è gestito tramite l’ecosistema Databricks, con pipeline automatizzate, versionamento dei modelli e deploy tramite Model Serving.
-### 🎯 Obiettivo
-Creare un sistema affidabile, scalabile e automatizzato che:
-riceve due immagini della moneta
-esegue inferenza in tempo reale tramite API
-salva i dati per il monitoraggio e il retraining
-aggiorna automaticamente il modello tramite pipeline schedulate
-### 📡 Flusso End-to-End
-L’architettura Databricks utilizzata comprende:
-UI (Streamlit)
-L’utente carica le due immagini.
-API REST (Databricks Gateway)
-La UI invia una richiesta HTTP al Databricks Model Serving.
-Model Serving
-Il modello di produzione esegue la predizione.
-DBFS Logging
-Le richieste possono essere salvate in DBFS:
-immagini
-risultati
-timestamp
-versione modello
-Retraining Pipeline (Databricks Jobs)
-Un job schedulato:
-legge i nuovi dati
-aggiorna il dataset
-esegue preprocessing
-allena un nuovo modello
-registra tutto su MLflow
-Model Registry
-Il nuovo modello viene confrontato con quello in produzione:
-se migliore → Promozione automatica
-se peggiore → rifiutato
-Aggiornamento automatico del serve endpoint
-Il modello nuovo passa automaticamente in Production.
-### 🧠 Modello di Deep Learning
-Il sistema usa un’architettura dual-input con backbone selezionabile:
-Backbone disponibili:
-ResNet18
-MobileNetV3 Small
-Due modalità:
-Dual Backbone – una CNN per fronte e una per retro
-Shared Backbone – una sola CNN condivisa
-Feature Fusion:
-concatenazione
-projection layer opzionale
-Output:
-regressione → anno di conio stimato
-### 📓 Notebook Principale
-L’intera pipeline tecnica è documentata qui:
-➡️ notebooks/Coin_Regression_Pipeline.ipynb
-Contiene:
-EDA
-preprocessing
-training
-K-Fold
-analisi statistica
-configurazione backbone
-inference
-### 🛠️ Documentazione Tecnica
-La documentazione è nella directory:
-docs/
-Contiene:
-architecture.md – architettura MLOps completa
-pipeline.md – pipeline dettagliata end-to-end
-api_schema.md – schema completo dell’API REST
+# 🪙 Coin Year Regression – End-to-End MLOps System on Databricks
 
-### ⚙️ Tecnologie Utilizzate
-Machine Learning
-PyTorch
-torchvision
-numpy
-pandas
-MLOps & Infrastruttura
-Databricks
-MLflow
-Model Registry
-Model Serving
-Databricks Jobs
-DBFS
-Front-end & API
-Streamlit
-REST API (JSON Base64)
-###  Come funziona l’inferenza
-L’utente carica le due immagini
-Il front-end le converte in Base64
-Invio richiesta JSON al Model Serving
-Il modello produce l’anno stimato
-La UI mostra il risultato
-### Esempio Chiamata API
+Questo progetto implementa un sistema completo di Computer Vision e MLOps per prevedere l’anno di conio di una moneta antica partendo da due immagini (fronte e retro).  
+Il sistema utilizza l’intera piattaforma Databricks: Model Serving, MLflow, Model Registry, Jobs per il retraining, DBFS per il logging, e un frontend Streamlit.
+
+---
+
+# 🎯 Obiettivo
+
+Costruire un sistema scalabile, automatico e affidabile per:
+
+- ricevere due immagini (front/back)  
+- eseguire inferenza in tempo reale tramite Model Serving  
+- registrare dati per monitoraggio e retraining  
+- aggiornare automaticamente il modello tramite pipeline schedulate  
+
+---
+
+# 🧩 Architettura End-to-End
+
+Il flusso completo del sistema è il seguente:
+
+### 1. Front-End (Streamlit)
+- L’utente carica due immagini (fronte e retro).
+- Le immagini vengono convertite in Base64.
+- Viene inviata una richiesta JSON all’API REST.
+
+### 2. Databricks Gateway (Endpoint REST)
+- Riceve la richiesta HTTP POST.
+- Inoltra le immagini al modello in produzione.
+- Gestisce risposta ed eventuali errori.
+
+### 3. Model Serving
+- Esegue inferenza in tempo reale.
+- Utilizza la versione più recente del modello in “Production”.
+- Restituisce l’anno di conio previsto.
+
+### 4. DBFS Logging (opzionale ma consigliato)
+Il sistema salva:
+- immagini in Base64  
+- predizione  
+- timestamp  
+- versione modello  
+- eventuali metadati  
+
+Questi dati alimentano:  
+- monitoraggio  
+- analisi qualità  
+- dataset per retraining  
+
+### 5. Retraining Pipeline (Databricks Jobs)
+Un job schedulato:
+- legge i nuovi dati da DBFS  
+- prepara il dataset aggiornato  
+- esegue preprocessing e cleaning  
+- allena un nuovo modello  
+- registra il tutto su MLflow  
+
+### 6. Validazione Automatica
+Il nuovo modello viene confrontato con quello in produzione:
+- se le metriche sono **migliori** → viene promosso  
+- se sono **peggiori** → viene scartato  
+
+### 7. MLflow Model Registry
+- Versionamento automatico dei modelli.
+- Gestione degli stage:
+  - None  
+  - Staging  
+  - Production  
+- Rollback immediato in caso di errori.
+
+### 8. Aggiornamento del Model Serving
+- Quando un modello viene promosso a “Production”, il serve endpoint utilizza automaticamente la nuova versione.
+- Nessun downtime.
+
+### 9. Inferenza tramite API
+L’interfaccia utente riceve il risultato in tempo reale e lo visualizza.
+
+---
+
+# 🧠 Modello di Deep Learning
+
+Il sistema utilizza un modello dual-input basato su PyTorch.
+
+### Backbone disponibili:
+- ResNet18  
+- MobileNetV3 Small  
+
+### Due modalità architetturali:
+- **Dual Backbone**  
+  - una CNN per fronte  
+  - una CNN per retro  
+
+- **Shared Backbone**  
+  - una sola CNN condivisa per entrambi i lati  
+
+### Feature Fusion:
+- concatenazione  
+- projection layer opzionale  
+
+### Output:
+- regressione (anno di conio)
+
+---
+
+# 📓 Notebook
+
+Notebook completo della pipeline tecnica:
+
+`notebooks/Coin_Regression_Pipeline.ipynb`
+
+Include:
+- EDA  
+- preprocessing  
+- configurazione modello  
+- training  
+- K-Fold  
+- analisi risultati  
+- inferenza  
+
+---
+
+# 📚 Documentazione Tecnica (cartella /docs)
+
+- **architecture.md** → architettura completa Databricks  
+- **pipeline.md** → pipeline end-to-end (data → model → deploy)  
+- **api_schema.md** → specifica tecnica dell’API REST  
+- architecture.png → schema visivo (in arrivo)
+
+---
+
+# 📡 Schema API 
+
+### Input:
+
 {
   "inputs": [
     {
@@ -97,8 +141,30 @@ La UI mostra il risultato
     }
   ]
 }
-Output:
+
+### Output:
 {
   "predictions": [ anno_predetto ]
 }
+
+### 🛠️ Stack Tecnologico
+-Machine Learning
+-PyTorch
+-torchvision
+-numpy
+-pandas
+-MLOps (Databricks)
+-MLflow
+-Model Registry
+-Databricks Workflows (Jobs)
+-Model Serving
+-DBFS
+### Front-end & API
+-Streamlit
+-REST API (JSON Base64)
+### 🚀 Flusso di Inferenza
+L’utente carica le due immagini
+Streamlit invia la richiesta JSON al Model Serving
+Il modello restituisce l’anno previsto
+La UI mostra la predizione
 
