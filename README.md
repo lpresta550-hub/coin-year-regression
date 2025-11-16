@@ -1,107 +1,104 @@
-# 🪙 Coin Year Regression – Deep Learning & MLOps Project
+### 🪙 Coin Year Regression – End-to-End MLOps System on Databricks
+Questo progetto implementa un sistema completo di Computer Vision e MLOps per prevedere l’anno di conio di una moneta antica a partire da due immagini (fronte e retro).
+L’intero flusso – dal preprocessing alla predizione in tempo reale – è gestito tramite l’ecosistema Databricks, con pipeline automatizzate, versionamento dei modelli e deploy tramite Model Serving.
+### 🎯 Obiettivo
+Creare un sistema affidabile, scalabile e automatizzato che:
+riceve due immagini della moneta
+esegue inferenza in tempo reale tramite API
+salva i dati per il monitoraggio e il retraining
+aggiorna automaticamente il modello tramite pipeline schedulate
+### 📡 Flusso End-to-End
+L’architettura Databricks utilizzata comprende:
+UI (Streamlit)
+L’utente carica le due immagini.
+API REST (Databricks Gateway)
+La UI invia una richiesta HTTP al Databricks Model Serving.
+Model Serving
+Il modello di produzione esegue la predizione.
+DBFS Logging
+Le richieste possono essere salvate in DBFS:
+immagini
+risultati
+timestamp
+versione modello
+Retraining Pipeline (Databricks Jobs)
+Un job schedulato:
+legge i nuovi dati
+aggiorna il dataset
+esegue preprocessing
+allena un nuovo modello
+registra tutto su MLflow
+Model Registry
+Il nuovo modello viene confrontato con quello in produzione:
+se migliore → Promozione automatica
+se peggiore → rifiutato
+Aggiornamento automatico del serve endpoint
+Il modello nuovo passa automaticamente in Production.
+### 🧠 Modello di Deep Learning
+Il sistema usa un’architettura dual-input con backbone selezionabile:
+Backbone disponibili:
+ResNet18
+MobileNetV3 Small
+Due modalità:
+Dual Backbone – una CNN per fronte e una per retro
+Shared Backbone – una sola CNN condivisa
+Feature Fusion:
+concatenazione
+projection layer opzionale
+Output:
+regressione → anno di conio stimato
+### 📓 Notebook Principale
+L’intera pipeline tecnica è documentata qui:
+➡️ notebooks/Coin_Regression_Pipeline.ipynb
+Contiene:
+EDA
+preprocessing
+training
+K-Fold
+analisi statistica
+configurazione backbone
+inference
+### 🛠️ Documentazione Tecnica
+La documentazione è nella directory:
+docs/
+Contiene:
+architecture.md – architettura MLOps completa
+pipeline.md – pipeline dettagliata end-to-end
+api_schema.md – schema completo dell’API REST
 
-Modello di **deep learning** basato su immagini **fronte/retro** per prevedere l’anno di conio di monete antiche.  
-Il progetto integra architetture CNN avanzate (ResNet18, MobileNetV3), configurazioni RGB/Grayscale, feature projection, cross-validation e pipeline end-to-end su **Databricks** con tracking tramite **MLflow** e deploy tramite **Model Serving**.
-
----
-
-# 🎯 Obiettivo
-
-Prevedere l’anno di conio di una moneta antica utilizzando due immagini (fronte e retro), sfruttando un modello neurale dual-input completamente configurabile e ottimizzato per compiti di regressione.
-
----
-
-# 🔍 Notebook Completo 
-
-Il notebook principale contiene l’intera pipeline di lavoro:
-
-✔ Esplorazione del dataset  
-✔ Preprocessing + trasformazioni (RGB/Grayscale)  
-✔ Configurazione dei parametri globali  
-✔ Selezione backbone: **ResNet18** o **MobileNetV3**  
-✔ Opzione **shared backbone** per feature sharing  
-✔ Feature projection layer personalizzato  
-✔ Training loop completo  
-✔ **K-Fold Cross Validation**  
-✔ Analisi statistica approfondita  
-✔ Inferenza del modello  
-
-📄 Notebook completo:  
-➡️ **`notebooks/Coin_Regression_Pipeline.ipynb`**
-
-É la documentazione esatta e completa del workflow end-to-end.
-
----
-
-# 🧠 Architettura del Modello
-
-Il modello supporta due modalità:
-
-### **1️⃣ Dual Backbone ResNet18/MobileNet (Front + Back separati)**  
-- Una CNN per il lato *front*  
-- Una CNN per il lato *back*  
-- Estrazione feature → concatenazione → regressione finale
-
-### **2️⃣ Shared Backbone (opzionale)**  
-- Una sola CNN condivisa  
-- Le due immagini passano nello stesso backbone  
-- Riduzione dei parametri  
-- Maggiore regolarizzazione
-
-### **Feature Projection Layer**  
-- Layer opzionale che riduce la dimensionalità delle feature  
-- Migliora generalizzazione e stabilità del modello
-
-📌 Implementazione: `src/model.py`
-
----
-
-# ⚙️ Pipeline di Addestramento
-
-### 🔧 Preprocessing
-- Resize 128×128  
-- Normalizzazione  
-- Conversione RGB o Grayscale  
-- Augmentation selezionabile  
-
-### 🧪 Training
-- Ottimizzatore: **Adam**  
-- Loss: **MAE**  
-- Scheduler (se abilitato)  
-- Training fully configurable via parametri globali  
-
-### 🔁 Validazione
-- **K-Fold Cross Validation (5 fold)**  
-- Logging delle metriche per ogni fold  
-
-### 📊 Metriche
-- MAE (principale)  
-- MSE  
-- R² (opzionale)  
-
-Esempio MAE finale: **≈ 20–25 anni**  
-
-
----
-
-# 🚀 Deployment & Serving
-
-Pipeline MLOps su Databricks:
-
-1. Tracking esperimenti con **MLflow**  
-2. Registrazione del modello su **Model Registry**  
-3. Deployment tramite **Model Serving**  
-4. Inferenza tramite **REST API**  
-5. Interfaccia Streamlit per predizione tramite upload immagini
-
-### Esempio richiesta API:
-
-```json
+### ⚙️ Tecnologie Utilizzate
+Machine Learning
+PyTorch
+torchvision
+numpy
+pandas
+MLOps & Infrastruttura
+Databricks
+MLflow
+Model Registry
+Model Serving
+Databricks Jobs
+DBFS
+Front-end & API
+Streamlit
+REST API (JSON Base64)
+###  Come funziona l’inferenza
+L’utente carica le due immagini
+Il front-end le converte in Base64
+Invio richiesta JSON al Model Serving
+Il modello produce l’anno stimato
+La UI mostra il risultato
+### Esempio Chiamata API
 {
   "inputs": [
     {
-      "front_image_base64": "...",
-      "back_image_base64": "..."
+      "front_image_base64": "stringa_base64",
+      "back_image_base64": "stringa_base64"
     }
   ]
 }
+Output:
+{
+  "predictions": [ anno_predetto ]
+}
+
