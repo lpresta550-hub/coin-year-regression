@@ -148,20 +148,20 @@ Include:
 }
 
 ### 🛠️ Stack Tecnologico
--Machine Learning
--PyTorch
--torchvision
--numpy
--pandas
--MLOps (Databricks)
--MLflow
--Model Registry
--Databricks Workflows (Jobs)
--Model Serving
--DBFS
+- Machine Learning
+- PyTorch
+- torchvision
+- numpy
+- pandas
+- MLOps (Databricks)
+- MLflow
+- Model Registry
+- Databricks Workflows (Jobs)
+- Model Serving
+- DBFS
 ### Front-end & API
--Streamlit
--REST API (JSON Base64)
+- Streamlit
+- REST API (JSON Base64)
 ### 🚀 Flusso di Inferenza
 L’utente carica le due immagini
 Streamlit invia la richiesta JSON al Model Serving
