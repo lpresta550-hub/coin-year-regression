@@ -1,43 +1,56 @@
 # 🪙 Coin Year Regression – Deep Learning & MLOps Project
 
-Modello di **deep learning** basato su immagini **fronte/retro** per prevedere l’anno di conio delle monete antiche.  
-Pipeline completa sviluppata su **Databricks**, con tracking esperimenti tramite **MLflow**, deploy tramite **Model Serving**, e interfaccia di inferenza tramite **Streamlit**.
+Modello di **deep learning** basato su immagini **fronte/retro** per prevedere l’anno di conio di monete antiche.  
+Il progetto integra architetture CNN avanzate (ResNet18, MobileNetV3), configurazioni RGB/Grayscale, feature projection, cross-validation e pipeline end-to-end su **Databricks** con tracking tramite **MLflow** e deploy tramite **Model Serving**.
 
 ---
 
 # 🎯 Obiettivo
 
-Sviluppare un sistema automatizzato che analizzi due immagini della stessa moneta (fronte e retro) e predica l’anno di conio attraverso un modello di regressione basato su **ResNet18** con doppio input.
+Prevedere l’anno di conio di una moneta antica utilizzando due immagini (fronte e retro), sfruttando un modello neurale dual-input completamente configurabile e ottimizzato per compiti di regressione.
 
 ---
 
-# 🔍 Notebook Completo
+# 🔍 Notebook Completo (Versione Avanzata)
 
-Il **notebook principale** contenente:
+Il notebook principale contiene l’intera pipeline di lavoro:
 
-- Esplorazione dataset (EDA)  
-- Preprocessing immagini  
-- Definizione del modello  
-- Training + Validazione  
-- MLflow Tracking  
-- Inferenza
+✔ Esplorazione del dataset  
+✔ Preprocessing + trasformazioni (RGB/Grayscale)  
+✔ Configurazione dei parametri globali  
+✔ Selezione backbone: **ResNet18** o **MobileNetV3**  
+✔ Opzione **shared backbone** per feature sharing  
+✔ Feature projection layer personalizzato  
+✔ Training loop completo  
+✔ **K-Fold Cross Validation**  
+✔ Analisi statistica approfondita  
+✔ Inferenza del modello  
 
-si trova qui:
-
+📄 Notebook completo:  
 ➡️ **`notebooks/Coin_Regression_Pipeline.ipynb`**
 
-Questo notebook documenta l’intero workflow end-to-end.
+É la documentazione esatta e completa del workflow end-to-end.
 
 ---
 
 # 🧠 Architettura del Modello
 
-- Base: **ResNet18** pre-addestrata su ImageNet  
-- Architettura dual-input:
-  - ResNet18 per il lato *fronte*
-  - ResNet18 per il lato *retro*
-- Concatenazione feature → Fully Connected finale  
-- Task: Regressione sull’anno di conio  
+Il modello supporta due modalità:
+
+### **1️⃣ Dual Backbone ResNet18/MobileNet (Front + Back separati)**  
+- Una CNN per il lato *front*  
+- Una CNN per il lato *back*  
+- Estrazione feature → concatenazione → regressione finale
+
+### **2️⃣ Shared Backbone (opzionale)**  
+- Una sola CNN condivisa  
+- Le due immagini passano nello stesso backbone  
+- Riduzione dei parametri  
+- Maggiore regolarizzazione
+
+### **Feature Projection Layer**  
+- Layer opzionale che riduce la dimensionalità delle feature  
+- Migliora generalizzazione e stabilità del modello
 
 📌 Implementazione: `src/model.py`
 
@@ -45,40 +58,41 @@ Questo notebook documenta l’intero workflow end-to-end.
 
 # ⚙️ Pipeline di Addestramento
 
-### ✔️ Preprocessing
-- Resize 224×224  
+### 🔧 Preprocessing
+- Resize 128×128  
 - Normalizzazione  
-- Data augmentation (opzionale)
+- Conversione RGB o Grayscale  
+- Augmentation selezionabile  
 
-### ✔️ Training
+### 🧪 Training
 - Ottimizzatore: **Adam**  
-- Loss: **MAE** (Mean Absolute Error)  
-- Valutazione con **K-Fold cross-validation**
+- Loss: **MAE**  
+- Scheduler (se abilitato)  
+- Training fully configurable via parametri globali  
 
-### ✔️ Tracking Esperimenti
-Tramite **MLflow**:
-- Modelli
-- Metriche
-- Parametri
-- Artifact
+### 🔁 Validazione
+- **K-Fold Cross Validation (5 fold)**  
+- Logging delle metriche per ogni fold  
 
-### ✔️ Metriche principali
-- **MAE**
-- MSE
-- R²
+### 📊 Metriche
+- MAE (principale)  
+- MSE  
+- R² (opzionale)  
 
-📊 *Esempio:* MAE finale ≈ **21 anni**  
+Esempio MAE finale: **≈ 20–25 anni**  
 
 
 ---
 
 # 🚀 Deployment & Serving
 
-Il modello viene:
+Pipeline MLOps su Databricks:
 
-1. Registrato in **MLflow Model Registry**  
-2. Pubblicato tramite **Databricks Model Serving**  
-3. Chiamato tramite **REST API**
+1. Tracking esperimenti con **MLflow**  
+2. Registrazione del modello su **Model Registry**  
+3. Deployment tramite **Model Serving**  
+4. Inferenza tramite **REST API**  
+5. Interfaccia Streamlit per predizione tramite upload immagini
 
 ### Esempio richiesta API:
 
